@@ -10,7 +10,7 @@ def getCandidate(token):
     word_count = Counter(words)
 
     # keep words with count more than 5
-    candidate = [w for w, c in word_count.items() if c > 5]
+    candidate = {w for w, c in word_count.items() if c > 5}
 
     return candidate
 
@@ -32,6 +32,30 @@ def save_co_occur(co_occur):
         for key, value in co_occur.items():
             writer.writerow([key, value])
 
-df = pd.read_csv('tweetTokenization.csv', on_bad_lines='skip')
-df = df.dropna()
-print(df)
+def getThaiWordList():
+    with open('lexitron.txt', 'r', encoding="UTF-8") as file:
+        thaiwords = set(i.rstrip() for i in file)
+    return thaiwords
+
+df = pd.read_csv('tweetTokenization.csv',sep='\t')
+token = [i.split(',') for i in df['words']]
+print('Tokenize words = ', len(token))
+
+# get thai dictionary
+thaiwords = getThaiWordList()
+print('Thai dictionary words = ', len(thaiwords))
+
+candidates = getCandidate(token)
+print('Candidate words = ', len(candidates))
+
+# get words not within thai dictionary
+wordsInThailist = thaiwords.intersection(candidates)
+wordsCandidate = candidates - wordsInThailist
+
+def saveCandidateWords():
+    with open('candidateWords.csv', 'w',newline='',encoding="UTF-8") as file:
+        writer = csv.writer(file, delimiter=",")
+        writer.writerow(['candidate'])
+        for row in wordsCandidate:
+            columns = [c.strip() for c in row.strip(', ').split(',')]
+            writer.writerow(columns)

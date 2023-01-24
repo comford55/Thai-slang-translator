@@ -5,6 +5,7 @@ from attacut import Tokenizer, tokenize
 
 def attacut():
     df = pd.read_csv('tweetCleanUp.csv')
+    df = df.dropna()
     token = [tokenize(i) for i in df['tweet']]
     # for i in df['tweet']:
     #     words = tokenize(i)
@@ -49,6 +50,7 @@ def save_co_occur(co_occur):
             writer.writerow([key, value])
 
 # token = attacut()
+# saveToCsv(token)
 
 
 
