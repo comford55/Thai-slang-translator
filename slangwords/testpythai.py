@@ -1,6 +1,5 @@
 from attacut import tokenize
 import pandas as pd
-from pythainlp.tag import pos_tag
 
 # test_txt = tokenize('สวยจึ้งมากเลยแม่วันนี้บูดสุดปังสุดปัง')
 # test_txt = tokenize('ของจริงไม่มีจกตา')
@@ -14,12 +13,14 @@ def getSlang(txt, slang):
 
     T = len(txt)
     possible_ngrams = int((T*(T+1))/2)
-    word_ngrams = [] # get all possible less than 6-grams and tag the index
-    for i in range(1,possible_ngrams+1):
-        for j in range(T+1-i):
-            if i <= 6:
-                ngram_words = txt[j:j+i]
-                word_ngrams.append((("".join([i[0] for i in ngram_words])), [i[1] for i in ngram_words]))
+    # word_ngrams = [] # get all possible less than 6-grams and tag the index
+    # for i in range(1,possible_ngrams+1):
+    #     for j in range(T+1-i):
+    #         if i <= 6:
+    #             ngram_words = txt[j:j+i]
+    #             word_ngrams.append((("".join([i[0] for i in ngram_words])), [i[1] for i in ngram_words]))
+        
+    word_ngrams = [("".join(i[0] for i in txt[j:j+i]), [i[1] for i in txt[j:j+i]]) for i in range(1,possible_ngrams+1) for j in range(T+1-i) if i <= 6]
 
 #     print(word_ngrams) [('ของ', [0]), ('จริง', [1]), ('ไม่', [2]), ('มี', [3]), ('จก', [4]), ('ตา', [5]), ('ของจริง', [0, 1]), ('จริงไม่', [1, 2]), ('ไม่มี', [2, 3]), ('มีจก', [
                         # 3, 4]), ('จกตา', [4, 5]), ('ของจริงไม่', [0, 1, 2]), ('จริงไม่มี', [1, 2, 3]), ('ไม่มีจก', [2, 3, 4]), ('มีจกตา', [3, 4, 5]), ('ของจริงไม่มี', [0, 1, 2, 3
