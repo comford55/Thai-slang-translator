@@ -1,7 +1,6 @@
 from attacut import tokenize
 import pandas as pd
 from pythainlp.tag import pos_tag
-import json
 
 # test_txt = tokenize('สวยจึ้งมากเลยแม่วันนี้บูดสุดปังสุดปัง')
 # test_txt = tokenize('ของจริงไม่มีจกตา')
@@ -40,6 +39,7 @@ def getSlang(txt, slang):
             if word[0] in slang_words:
                 ngramsl.append((word[0], word[1], 'คำสแลง'))
 
+
 #     print(ngramsl) [('ถึง', [0], 'คำปกติ'), ('เวลา', [1], 'คำปกติ'), ('ที่', [2], 'คำปกติ'), ('เรา', [3], 'คำปกติ'), ('จะ', [4], 'คำปกติ'), ('ต้อง', [5], 'คำปกติ'), 
                     # ('มูฟออน', [6], 'คำสแลง'), ('ได้', [7], 'คำปกติ'), ('แล้ว', [8], 'คำปกติ')]
 
@@ -52,14 +52,58 @@ def getSlang(txt, slang):
                 if i == j[1][0]:
                     ngramsl.remove((j[0], j[1], 'คำปกติ')) # remove 1-grams that contain delngram
 
-    for i in ngramsl: # remove and replace n-grams in the rigt index ('เกินปุยมุ้ย', [5, 6], 'คำสแลง') will place in index of 5
-        if len(i[1]) > 1:
-            if i[1][0] < len(i[1]):
-                replaceword = (i[0], i[1], 'คำสแลง')
-                ngramsl.remove(replaceword)
-                ngramsl[i[1][0]] = replaceword
+    # print(ngramsl)
 
-    sl = [(word[0], word[-1]) for word in ngramsl] # [('เจอ', 'คำปกติ'), ('เธอ', 'คำปกติ'), ('แล้ว', 'คำปกติ'), ('รู้สึก', 'คำปกติ'), ('ว่า', 'คำปกติ'), ('เกินปุยมุ้ย', 'คำสแลง')]
+    # newidx = 0
+    # checkNgrams = [t for t in ngramsl if len(t[1])>1]
+    # # print(len(checkNgrams))
+    # checkAmountSlang = [c for c in ngramsl if c[2] == 'คำสแลง']
+    # # print(len(checkAmountSlang))
+    # condition = len(checkNgrams) >= 1 and len(checkAmountSlang) > 1
+
+    # smallestIndex = [sm for sm in ngramsl if sm[1] > 1 [d for d in ]]
+
+    # smallest = sorted([sml[1][0] for sml in ngramsl if len(sml[1]) > 1 ])
+
+    # print(smallest)
+    # sort = sorted([i[1][0] for i in ngramsl])
+    # for i in ngramsl:
+    #     for j in sort:
+    #         if i[1][0] == j:
+    #             print(i[1][0], j)
+    #             ngramsSorted.append((i[0], i[-1]))
+
+    # for i in sort:
+    #     for j in ngramsl:
+    #         if j[1][0] == i:
+    #             print(j)
+
+    # sl = [(j[0], j[-1]) for i in sort for j in ngramsl if j[1][0] == i]
+    sl = [(j[0], j[-1]) for i in sorted([i[1][0] for i in ngramsl]) for j in ngramsl if j[1][0] == i]
+    # print(sort)
+    # print(ngramsSorted)
+
+    # for i in ngramsl[::-1]: # remove and replace n-grams in the rigt index ('เกินปุยมุ้ย', [5, 6], 'คำสแลง') will place in index of 5
+    #     if len(i[1]) > 1 and condition:
+    #         # print(newidx)
+    #         # print(i)
+    #         # print(len(ngramsl), i[1][0])
+    #         # print(ngramsl)
+    #         replaceword = (i[0], i[1], 'คำสแลง')
+    #         # print(replaceword)
+    #         # ngramsl.remove(replaceword)
+    #         # print(ngramsl.index(i))
+    #         if newidx != 0:
+    #             ngramsl[i[1][0]-newidx] = replaceword
+    #         # elif newidx != 0 and replaceword not in ngramsl:
+    #         #     ngramsl[i[1][0]-newidx] = old_replace
+    #         else:
+    #             ngramsl[i[1][0]] = replaceword
+    #         # ngramsl.pop()
+    #         # print(ngramsl)
+    #         newidx+=len(i[1])
+        
+    # sl = [(word[0], word[-1]) for word in ngramsl] # [('เจอ', 'คำปกติ'), ('เธอ', 'คำปกติ'), ('แล้ว', 'คำปกติ'), ('รู้สึก', 'คำปกติ'), ('ว่า', 'คำปกติ'), ('เกินปุยมุ้ย', 'คำสแลง')]
 
     return sl
 
@@ -74,6 +118,7 @@ def printFullText(txt):
 
 def findSlang(txt):
     tokenWords = tokenize(txt)
+    # print(tokenWords)
     tagwords = [(tokenWords[i], i) for i in range(len(tokenWords))]
     getTag = getSlang(tagwords, slang)
     printFullText(getTag)
@@ -110,3 +155,10 @@ findSlang('เจอแบบนี้งานไม่ใหญ่แน่น
 
 findSlang('โป๊ะ??? ...โป๊ะคืออะไร? อะไรคือโป๊ะ? มันเป็นยังไง?')
 
+findSlang('คำสแลง (Slang) ในภาษาอังกฤษ คือ คำ หรือสำนวนที่ใช้พูดกันแล้วเข้าใจเฉพาะกลุ่ม แต่ไม่ใช่ภาษาที่ยอมรับว่าถูกต้องเป็นทางการสำหรับทุกคน น้องๆ ที่กำลังจะไปเรียนต่อต่างประเทศ หรือมีเพื่อนเป็นชาวต่างชาติ ควรมาเรียนรู้ รวม 120 คำแสลงภาษาอังกฤษที่ใช้บ่อยในชีวิตประจำวัน จะได้เข้าใจกันมากขึ้น แต่อย่าลืมนะคะ คำแสลงเหล่านี้ ไม่ควรเอาไปใช้เขียนใน Essay เด็ดขาด')
+
+findSlang('อยู่ดีๆก็มาเชิ่ดใส่ โคตรบ้งอ่ะ5555 บ้งมากกกกกกกกกกก')
+
+findSlang('เยอะขนาดนี้งานไม่ใหญ่แน่นะวิ จะไหวหรอ ไม่ไหวแน่ๆขอเชิ่ดหนีดีฟ่าาาแล้วหนีไปทำเนียนแอ๊บแมน แบบนี้มันเต็มคาราเบลเลยนะ555 ')
+
+findSlang('โบ๊ะบ๊ะมากเลยโอปป้างานไม่ใหญ่แน่นะวิ อย่าหาทำ')
