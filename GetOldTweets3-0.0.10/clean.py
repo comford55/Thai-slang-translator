@@ -4,16 +4,16 @@ import pandas as pd
 from attacut import Tokenizer, tokenize
 
 def attacut():
-    df = pd.read_csv('tweetCleanUp.csv')
+    df = pd.read_csv('phueakCleanUp.csv')
     df = df.dropna()
     token = [tokenize(i) for i in df['tweet']]
     # for i in df['tweet']:
     #     words = tokenize(i)
     #     token.append(words)
-    return token    
+    return token
 
 def saveToCsv(token):
-    with open('tweetTokenization.csv', 'w', newline='',encoding="UTF-8") as myfile:
+    with open('phueakTokenization.csv', 'w', newline='',encoding="UTF-8") as myfile:
         writer = csv.writer(myfile, delimiter=",")
         writer.writerow(['words'])
         for row in token:
@@ -50,10 +50,12 @@ def save_co_occur(co_occur):
             writer.writerow([key, value])
 
 token = attacut()
-saveToCsv(token)
-    
-
-
-
-
-
+# saveToCsv(token)
+listword = []
+for i in token :
+    for j in i :
+        if j == "เผือก" :
+            listword.append(i)
+            break
+print(listword)
+saveToCsv(listword)
