@@ -74,7 +74,7 @@ def test_slang(model,data_test ,slang):
     return prob_list
 
 corre_test = test_slang(model,data_test_slang,"เผือก")
-# incorre_test = test_slang(model,data_test_notslang,"เผือก")
+incorre_test = test_slang(model,data_test_notslang,"เผือก")
 
 # print(incorre_test)
 print(corre_test)

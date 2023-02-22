@@ -69,7 +69,7 @@ def attacut():
 data = attacut()
 model = NgramLanguageModel(2, data)
 
-data_test_slang = pd.read_csv('phueaktest3.csv')
+data_test_slang = pd.read_csv('phueaktest.csv')
 data_test_notslang = pd.read_csv('phueaktest2.csv')
 
 def test_slang(model,data_test ,slang):
@@ -81,15 +81,15 @@ def test_slang(model,data_test ,slang):
     return prob_list
 
 corre_test = test_slang(model,data_test_slang,"เผือก")
-# incorre_test = test_slang(model,data_test_notslang,"เผือก")
+incorre_test = test_slang(model,data_test_notslang,"เผือก")
 
 # print(incorre_test)
 print(corre_test)
-# plt.plot(corre_test)
-# plt.plot(incorre_test)
-# plt.ylim([0.00125,0.00140])
-# plt.xlim(1,14)
-# plt.show()
+plt.plot(corre_test)
+plt.plot(incorre_test)
+plt.ylim([0.00125,0.00140])
+plt.xlim(1,14)
+plt.show()
 
 # min_prob = model.min_probability()
 # print(min_prob)
