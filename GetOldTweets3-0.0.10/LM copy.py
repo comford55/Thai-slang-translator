@@ -36,16 +36,23 @@ class NgramLanguageModel:
         smoothing_value = 1
         return (self.model[context][next_word] + smoothing_value) / (context_counts + smoothing_value * len(self.model))
 
-    
 
 def slang_word_probability(model, sentence, slang_word):
     probability = 1
+    print(sentence)
     for i in range(len(sentence)):
         if sentence[i] == slang_word:
             left_context = sentence[max(0, i - model.n + 1):i]
             right_context = sentence[i+1:i+model.n]
-            context = left_context + right_context
-            next_word = sentence[i]
+            if model.n == 1:
+                context = left_context + right_context
+                next_word = sentence[i]
+            elif model.n == 2:
+                if i > 0:
+                    context = (sentence[i-1],)
+                else:
+                    context = ()
+                next_word = sentence[i]
             probability *= model.probability(context, next_word)
     return probability
 
@@ -56,13 +63,13 @@ def attacut():
     # for i in df['tweet']:
     #     words = tokenize(i)
     #     token.append(words)
-    return token 
+    return token   
 
 
 data = attacut()
 model = NgramLanguageModel(2, data)
 
-data_test_slang = pd.read_csv('phueaktest.csv')
+data_test_slang = pd.read_csv('phueaktest3.csv')
 data_test_notslang = pd.read_csv('phueaktest2.csv')
 
 def test_slang(model,data_test ,slang):
@@ -78,24 +85,17 @@ corre_test = test_slang(model,data_test_slang,"เผือก")
 
 # print(incorre_test)
 print(corre_test)
-# fig, ax = plt.subplots()
-plt.plot(corre_test)
-plt.plot(incorre_test)
-plt.ylim([0.00125,0.00140])
-plt.xlim(1,14)
-# ax.set_xlabel('Data Point Index')
-# ax.set_ylabel('Data Value')
-# formatter = ScalarFormatter(useMathText=True)
-# formatter.set_powerlimits((-3, 4))
-# ax.yaxis.set_major_formatter(formatter)
-plt.show()
-    
+# plt.plot(corre_test)
+# plt.plot(incorre_test)
+# plt.ylim([0.00125,0.00140])
+# plt.xlim(1,14)
+# plt.show()
+
+# min_prob = model.min_probability()
+# print(min_prob)
     
 # print(tokenize(data_test_slang["tweet_test"]))
 
-def getProb():
-    prob = 0
-    return prob
 
 
 
