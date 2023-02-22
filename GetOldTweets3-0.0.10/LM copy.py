@@ -39,16 +39,23 @@ class NgramLanguageModel:
         else:
             return (self.model[context][next_word] + smoothing_value) / (context_counts + smoothing_value * len(self.model))
 
-    
 
 def slang_word_probability(model, sentence, slang_word):
     probability = 1
+    print(sentence)
     for i in range(len(sentence)):
         if sentence[i] == slang_word:
             left_context = sentence[max(0, i - model.n + 1):i]
             right_context = sentence[i+1:i+model.n]
-            context = left_context + right_context
-            next_word = sentence[i]
+            if model.n == 1:
+                context = left_context + right_context
+                next_word = sentence[i]
+            elif model.n == 2:
+                if i > 0:
+                    context = (sentence[i-1],)
+                else:
+                    context = ()
+                next_word = sentence[i]
             probability *= model.probability(context, next_word)
     return probability
 
@@ -59,13 +66,13 @@ def attacut():
     # for i in df['tweet']:
     #     words = tokenize(i)
     #     token.append(words)
-    return token 
+    return token   
 
 
 data = attacut()
 model = NgramLanguageModel(2, data)
 
-data_test_slang = pd.read_csv('phueaktest.csv')
+data_test_slang = pd.read_csv('phueaktest3.csv')
 data_test_notslang = pd.read_csv('phueaktest2.csv')
 
 def test_slang(model,data_test ,slang):
