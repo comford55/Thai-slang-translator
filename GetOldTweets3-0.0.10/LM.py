@@ -78,17 +78,24 @@ corre_test = test_slang(model,data_test_slang,"เผือก")
 
 # print(incorre_test)
 print(corre_test)
-# plt.plot(corre_test)
-# plt.plot(incorre_test)
-# plt.ylim([0.00125,0.00140])
-# plt.xlim(1,14)
-# plt.show()
-
-# min_prob = model.min_probability()
-# print(min_prob)
+# fig, ax = plt.subplots()
+plt.plot(corre_test)
+plt.plot(incorre_test)
+plt.ylim([0.00125,0.00140])
+plt.xlim(1,14)
+# ax.set_xlabel('Data Point Index')
+# ax.set_ylabel('Data Value')
+# formatter = ScalarFormatter(useMathText=True)
+# formatter.set_powerlimits((-3, 4))
+# ax.yaxis.set_major_formatter(formatter)
+plt.show()
+    
     
 # print(tokenize(data_test_slang["tweet_test"]))
 
+def getProb():
+    prob = 0
+    return prob
 
 
 

@@ -20,8 +20,8 @@ def saveToCsv(list):
             writer.writerow(columns)
 
 # df = pd.read_csv('tweet.csv')
-df = pd.read_csv('Phueak.csv')
-tweets = df['tweet'].dropna()
-# print(tweets)
-cleanTweets = cleanText(tweets)
-saveToCsv(cleanTweets)
+# df = pd.read_csv('Phueak.csv')
+# tweets = df['tweet'].dropna()
+# # print(tweets)
+# cleanTweets = cleanText(tweets)
+# saveToCsv(cleanTweets)
