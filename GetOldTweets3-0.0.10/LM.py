@@ -34,10 +34,7 @@ class NgramLanguageModel:
         context = tuple(context)
         context_counts = sum(self.model[context].values())
         smoothing_value = 1
-        if next_word not in self.model[context]:
-            return self.min_probability()
-        else:
-            return (self.model[context][next_word] + smoothing_value) / (context_counts + smoothing_value * len(self.model))
+        return (self.model[context][next_word] + smoothing_value) / (context_counts + smoothing_value * len(self.model))
 
     
 
