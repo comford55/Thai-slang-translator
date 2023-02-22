@@ -80,9 +80,12 @@ plt.xlim(1,14)
 # ax.yaxis.set_major_formatter(formatter)
 plt.show()
     
-    
+
 # print(tokenize(data_test_slang["tweet_test"]))
 
+def getProb():
+    prob = 0
+    return prob
 
 
 
