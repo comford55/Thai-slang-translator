@@ -13,9 +13,10 @@ if not existed:
 df = pd.read_csv(file_path)
 tweet = df['tweet']
 regex = cleanText(tweet)
-token = [tokenize(i) for i in regex]
-for word in token:
-    print(word)
+print(regex)
+# token = [tokenize(i) for i in regex]
+# for word in token:
+#     print(word)
 
 
 

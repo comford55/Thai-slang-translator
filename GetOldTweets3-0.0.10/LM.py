@@ -56,7 +56,7 @@ def attacut():
     # for i in df['tweet']:
     #     words = tokenize(i)
     #     token.append(words)
-    return token 
+    return token   
 
 
 data = attacut()

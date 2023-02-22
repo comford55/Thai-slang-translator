@@ -97,7 +97,7 @@ plt.show()
     
 # print(tokenize(data_test_slang["tweet_test"]))
 
-
+print("hello")
 
 
 # Calculate the probability of a word given its context
