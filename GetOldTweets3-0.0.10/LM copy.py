@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 from matplotlib.ticker import ScalarFormatter
 from math import log, exp
 import matplotlib.ticker as ticker
+from pythainlp.tokenize import word_tokenize
 
 class NgramLanguageModel:
     def __init__(self, n, data):
@@ -59,7 +60,7 @@ def slang_word_probability(model, sentence, slang_word):
 def attacut():
     df = pd.read_csv('phueakCleanUp.csv')
     df = df.dropna()
-    token = [tokenize(i) for i in df['tweet']]
+    token = [word_tokenize(i, engine="newmm") for i in df['tweet']]
     # for i in df['tweet']:
     #     words = tokenize(i)
     #     token.append(words)
@@ -75,7 +76,7 @@ data_test_notslang = pd.read_csv('phueaktest2.csv')
 def test_slang(model,data_test ,slang):
     prob_list = []
     for i in data_test["tweet_test"]:
-        test_sentence = tokenize(i)
+        test_sentence = word_tokenize(i, engine="newmm")
         prob = slang_word_probability(model,test_sentence,slang)
         prob_list.append(prob)
     return prob_list
@@ -83,21 +84,18 @@ def test_slang(model,data_test ,slang):
 corre_test = test_slang(model,data_test_slang,"เผือก")
 incorre_test = test_slang(model,data_test_notslang,"เผือก")
 
-# print(incorre_test)
-print(corre_test)
+print(incorre_test)
+# print(corre_test)
 plt.plot(corre_test)
 plt.plot(incorre_test)
 plt.ylim([0.00125,0.00140])
-plt.xlim(1,14)
+plt.xlim(1,20)
 plt.show()
 
 # min_prob = model.min_probability()
 # print(min_prob)
     
 # print(tokenize(data_test_slang["tweet_test"]))
-
-
-
 
 
 
