@@ -85,7 +85,7 @@ corre_test = test_slang(model,data_test_slang,"เผือก")
 incorre_test = test_slang(model,data_test_notslang,"เผือก")
 
 print(incorre_test)
-# print(corre_test)
+print(corre_test)
 plt.plot(corre_test)
 plt.plot(incorre_test)
 plt.ylim([0.00125,0.00140])
