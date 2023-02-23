@@ -77,6 +77,11 @@ def test_slang(model,data_test ,slang):
 
 corre_test = test_slang(model,data_test_slang,"เผือก")
 incorre_test = test_slang(model,data_test_notslang,"เผือก")
+<<<<<<< HEAD
+=======
+
+# print(incorre_test)
+>>>>>>> 1f2caf231cd8ef928b7d15c1b4dd5edd0fa2d067
 print(corre_test)
 # print(incorre_test)
 # print(corre_test)

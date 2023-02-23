@@ -40,7 +40,7 @@ class NgramLanguageModel:
 
 def slang_word_probability(model, sentence, slang_word):
     probability = 1
-    print(sentence)
+    # print(sentence)
     for i in range(len(sentence)):
         if sentence[i] == slang_word:
             left_context = sentence[max(0, i - model.n + 1):i]
@@ -66,7 +66,6 @@ def attacut():
     #     token.append(words)
     return token   
 
-
 data = attacut()
 model = NgramLanguageModel(2, data)
 
@@ -84,6 +83,7 @@ def test_slang(model,data_test ,slang):
 corre_test = test_slang(model,data_test_slang,"เผือก")
 incorre_test = test_slang(model,data_test_notslang,"เผือก")
 
+<<<<<<< HEAD:GetOldTweets3-0.0.10/LM copy.py
 print(incorre_test)
 print(corre_test)
 plt.plot(corre_test)
@@ -91,17 +91,27 @@ plt.plot(incorre_test)
 plt.ylim([0.00125,0.00140])
 plt.xlim(1,20)
 plt.show()
+=======
+# print(incorre_test)
+# print(corre_test)
+# plt.plot(corre_test)
+# plt.plot(incorre_test)
+# plt.ylim([0.00125,0.00140])
+# plt.xlim(1,20)
+# plt.show()
+>>>>>>> 1f2caf231cd8ef928b7d15c1b4dd5edd0fa2d067:GetOldTweets3-0.0.10/LM_copy.py
 
 # min_prob = model.min_probability()
 # print(min_prob)
     
+def getProb(data_test ,slang):
+    # prob_list = []
+    test_sentence = word_tokenize(data_test, engine="newmm")
+    prob = slang_word_probability(model,test_sentence,slang)
+    # prob_list.append(prob)
+    return prob
+
 # print(tokenize(data_test_slang["tweet_test"]))
-
-print("hello")
-
-
-
-
 
 # Calculate the probability of a word given its context
 

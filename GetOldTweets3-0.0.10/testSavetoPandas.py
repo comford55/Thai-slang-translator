@@ -4,7 +4,7 @@ from regexCharacter import cleanText
 from attacut import tokenize
 
 text = input("Enter your word : ")
-file_path = f'../slangwords/WordFromTweetCSV/{text}.csv'
+file_path = f'../GetOldTweets3-0.0.10/slangwords/WordFromTweetCSV/{text}.csv'
 existed = os.path.exists(file_path)
 if not existed:
     os.system(f'python cli.py -s {text} -l th --limit 100 -o {file_path} --csv')
