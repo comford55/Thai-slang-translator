@@ -19,5 +19,5 @@ def getSynset(synset):
 	else:
 		return None
         
-print(getSynset("สุดยอด"))
-print(getWords("02503365-v"))
+print(getSynset("บูด"))
+print(getWords("01503061-n"))
