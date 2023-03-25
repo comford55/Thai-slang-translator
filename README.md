@@ -1,3 +1,6 @@
+This project is about detect and give the meaning of the slang words found in the context for Seminar and Research Methodology subject. 
+I forked this project from https://github.com/marquisvictor/Optimized-Modified-GetOldTweets3-OMGOT using this as a Tweet scraping
+
 # Optimized-Modified-GetOldTweets3-OMGOT
 GetOldTweets-Python is a project written in Python to mine old and backdated tweets, It bypasses some limitations/restrictions of the Twitter API. This Repo houses an improvement fork of the original GetOldTweets Library by [Jefferson Herique](https://github.com/Jefferson-Henrique/GetOldTweets-python). The improvement makes running this package on Windows OS seamless with Python 3.x. 
 
