@@ -22,38 +22,22 @@ class NgramLanguageModel:
                 next_word = sentence[i]
                 self.model[context][next_word] += 1
 
-    def min_probability(self):
-        min_prob = 1
-        for context in self.model.keys():
-            for word in self.model[context].keys():
-                prob = self.probability(context, word)
-                if prob < min_prob:
-                    min_prob = prob
-        return min_prob/4
 
     def probability(self, context, next_word):
         context = tuple(context)
         context_counts = sum(self.model[context].values())
         smoothing_value = 1
         return (self.model[context][next_word] + smoothing_value) / (context_counts + smoothing_value * len(self.model))
-
+    
 
 def slang_word_probability(model, sentence, slang_word):
     probability = 1
-    # print(sentence)
     for i in range(len(sentence)):
         if sentence[i] == slang_word:
             left_context = sentence[max(0, i - model.n + 1):i]
             right_context = sentence[i+1:i+model.n]
-            if model.n == 1:
-                context = left_context + right_context
-                next_word = sentence[i]
-            elif model.n == 2:
-                if i > 0:
-                    context = (sentence[i-1],)
-                else:
-                    context = ()
-                next_word = sentence[i]
+            context = left_context + right_context
+            next_word = sentence[i]
             probability *= model.probability(context, next_word)
     return probability
 

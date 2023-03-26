@@ -75,9 +75,6 @@ def attacut():
     df = pd.read_csv('phueakCleanUp.csv')
     df = df.dropna()
     token = [word_tokenize(i, engine="newmm") for i in df['tweet']]
-    # for i in df['tweet']:
-    #     words = tokenize(i)
-    #     token.append(words)
     return token   
 
 
