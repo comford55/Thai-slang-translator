@@ -29,4 +29,4 @@ def saveToCsv(list):
 df = pd.read_csv("thai-language-tweets-เท.csv")
 tweets = df['content'].dropna()
 cleanTweets = cleanText(tweets)
-saveToCsv(cleanTweets)
+saveToCsv(cleanTweets, 'หยอง')
