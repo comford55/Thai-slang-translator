@@ -10,7 +10,7 @@ from math import log, exp
 import matplotlib.ticker as ticker
 from pythainlp.tokenize import word_tokenize
 import csv
-
+from sklearn.metrics import confusion_matrix
 import re
 from collections import defaultdict, Counter
 import re
@@ -88,7 +88,7 @@ def generate_contexts(sentence,n,slangword):
     return new_contexts
 
 def getToken():
-    df = pd.read_csv('phueakCleanUp.csv')
+    df = pd.read_csv('เทTrain_data.csv')
     df = df.dropna()
     token = [word_tokenize(i, engine="newmm") for i in df['tweet']]
     # for i in df['tweet']:
@@ -96,33 +96,53 @@ def getToken():
     #     token.append(words)
     return token
 
+def calculate_metrics(confusion_matrix):
+    """
+    Calculates accuracy, error rate, precision, and recall given a confusion matrix.
+    Args:
+        confusion_matrix (array): Array of shape (2, 2) representing the confusion matrix.
+    Returns:
+        Tuple of (accuracy, error_rate, precision, recall).
+    """
+    true_positives = confusion_matrix[0][0]
+    false_positives = confusion_matrix[0][1]
+    false_negatives = confusion_matrix[1][0]
+    true_negatives = confusion_matrix[1][1]
+
+    accuracy = (true_positives + true_negatives) / np.sum(confusion_matrix)
+    error_rate = (false_positives + false_negatives) / np.sum(confusion_matrix)
+    precision = true_positives / (true_positives + false_positives)
+    recall = true_positives / (true_positives + false_negatives)
+
+    return accuracy, error_rate, precision, recall
+
 data = getToken()
 
-data_test_slang = pd.read_csv('phueaktest.csv')
-data_test_notslang = pd.read_csv('phueaktest2.csv')
-data_test = pd.read_csv('phueaktest3.csv')
-model = NgramLanguageModel(3, data,"เผือก")
-sentence = "ไม่เผือกนะคะ"
-# print(model.models)
+data_test_slang = pd.read_csv('เผือกTest_data.csv')
+data_test = pd.read_csv('เผือกTest_set.csv')
+data_check_test = pd.read_csv('เผือก_checktest.csv')
+data_test_slang2 = pd.read_csv('แกงTest_data.csv')
+data_test2 = pd.read_csv('แกงTest_set.csv')
+data_check_test2 = pd.read_csv('แกง_checktest.csv')
+data_test_slang3 = pd.read_csv('เทTest_data.csv')
+data_test3 = pd.read_csv('เทTest_set.csv')
+data_check_test3 = pd.read_csv('เท_checktest.csv')
+model = NgramLanguageModel(3, data,"เท")
 
-# with open('probabilities.csv', 'w', newline='', encoding='utf-8') as f:
-#     writer = csv.writer(f)
-#     writer.writerow(['context', 'next_word', 'probability'])
-#     for n in range(1, model.max_n+1):
-#         model_n = model.models[n].copy()
-#         for context in model_n:
-#             for next_word in model_n[context]:
-#                 prob = model.probability(context, next_word)
-#                 if next_word == "เผือก":
-#                     writer.writerow([context, next_word, prob])
 
-context_in_sentence = generate_contexts(word_tokenize(sentence),3,"เผือก")
-# print(range(len(context_in_sentence)))
-# print(context_in_sentence)
-# print(type(context_in_sentence[-1]))
+with open('เท_probabilities.csv', 'w', newline='', encoding='utf-8') as f:
+    writer = csv.writer(f)
+    writer.writerow(['context', 'next_word', 'probability'])
+    for n in range(1, model.max_n+1):
+        model_n = model.models[n].copy()
+        for context in model_n:
+            for next_word in model_n[context]:
+                prob = model.probability(context, next_word)
+                if next_word == "เท":
+                    writer.writerow([context, next_word, prob])
 
-def getprob():
-    smoothing_value = 0.001
+def getprob(context_in_sentence):
+    smoothing_value = 1
     prob = 1
     probabilities = []
     with open('probabilities.csv', 'r',encoding='utf-8') as f:
@@ -145,16 +165,16 @@ def getprob():
         else:
             prob *= smoothing_value
     
-def getprob_datatest(data_test_slang):
+def getprob_datatest(data_test_slang,slang):
     probabilities_test = []
     for i in data_test_slang["tweet_test"]:
         # print(type(i))
-        context_in_sentence = generate_contexts(word_tokenize(i),3,"เผือก")
+        context_in_sentence = generate_contexts(word_tokenize(i),3,slang)
         # print(context_in_sentence)
         smoothing_value = 1
         prob = 1
         probabilities = []
-        with open('probabilities.csv', 'r',encoding='utf-8') as f:
+        with open(slang+'_probabilities.csv', 'r',encoding='utf-8') as f:
             reader = csv.reader(f)
             for row in reader:
                 row1 = row[0]
@@ -177,17 +197,17 @@ def getprob_datatest(data_test_slang):
 
     return probabilities_test
 
-def getprob_datatest_threshold(data_test_slang,threshold):
-    probabilities_test = {}
+def getprob_datatest_threshold(data_test_slang,threshold,slang):
+    probabilities_test = []
     for i in data_test_slang["tweet_test"]:
         # print(type(i))
-        context_in_sentence = generate_contexts(word_tokenize(i),3,"เผือก")
+        context_in_sentence = generate_contexts(word_tokenize(i),3,slang)
         # print(context_in_sentence)
         sentence = i
         smoothing_value = 1
         prob = 1
         probabilities = []
-        with open('probabilities.csv', 'r',encoding='utf-8') as f:
+        with open(slang+'_probabilities.csv', 'r',encoding='utf-8') as f:
             reader = csv.reader(f)
             for row in reader:
                 row1 = row[0]
@@ -206,30 +226,48 @@ def getprob_datatest_threshold(data_test_slang,threshold):
                 prob *= probabilities[i]+smoothing_value
             else:
                 prob *= smoothing_value
-        probabilities_test[sentence] = prob >=threshold
+        if prob >=threshold:
+            probabilities_test.append(1)
+        else:
+            probabilities_test.append(0)
+
 
     return probabilities_test
-
-test = getprob_datatest(data_test_slang)
-test2 = getprob_datatest(data_test_notslang)
+test = getprob_datatest(data_test_slang,"เผือก")
 filtered_list = [x for x in test if x != 1]
 threshold = min(filtered_list)
-test_check = getprob_datatest_threshold(data_test,threshold)
-print(test_check)
-# print(test2)
+test_check = getprob_datatest_threshold(data_test,threshold,"เผือก")
+result_matrix = confusion_matrix(data_check_test["result"],test_check)
+cal = calculate_metrics(result_matrix)
+print("confusion Matrix ของคำว่า เผือก :")
+print(result_matrix)
+print("accuracy : "+ str(cal[0]*100) +"  %")
+print("error_rate : "+ str(cal[1]*100) +"  %")
+print("precision : "+ str(cal[2]*100) +"  %")
+print("recall : "+ str(cal[3]*100) +"  %")
 
-# # create x-axis values
-# x = list(range(len(test)))
+test_2 = getprob_datatest(data_test_slang2,"แกง")
+filtered_list = [x for x in test_2 if x != 1]
+threshold_2 = min(filtered_list)
+test_check_2 = getprob_datatest_threshold(data_test2,threshold_2,"แกง")
+result_matrix2 = confusion_matrix(data_check_test2["result"],test_check_2)
+cal2 = calculate_metrics(result_matrix2)
+print("confusion Matrix ของคำว่า แกง :")
+print(result_matrix2)
+print("accuracy : "+ str(cal2[0]*100) +"  %")
+print("error_rate : "+ str(cal2[1]*100) +"  %")
+print("precision : "+ str(cal2[2]*100) +"  %")
+print("recall : "+ str(cal2[3]*100) +"  %")
 
-# # plot the two lists as line graphs
-# plt.plot(x, test, label='Probabilities Test')
-# plt.plot(x, test2, label='Probabilities Train')
-
-# # add labels and legend
-# plt.xlabel('Tweet Index')
-# plt.ylabel('Probability')
-# plt.title('Probability Comparison')
-# plt.legend()
-
-# # show the plot
-# plt.show()
+test_3 = getprob_datatest(data_test_slang3,"เท")
+filtered_list = [x for x in test_3 if x != 1]
+threshold_3 = min(filtered_list)
+test_check_3 = getprob_datatest_threshold(data_test3,threshold_3,"เท")
+result_matrix3 = confusion_matrix(data_check_test3["result"],test_check_3)
+cal3 = calculate_metrics(result_matrix3)
+print("confusion Matrix ของคำว่า เท :")
+print(result_matrix3)
+print("accuracy : "+ str(cal3[0]*100) +"  %")
+print("error_rate : "+ str(cal3[1]*100) +"  %")
+print("precision : "+ str(cal3[2]*100) +"  %")
+print("recall : "+ str(cal3[3]*100) +"  %")

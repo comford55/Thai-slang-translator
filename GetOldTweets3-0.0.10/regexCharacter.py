@@ -12,7 +12,7 @@ def cleanText(tweets):
     return clean
 
 def saveToCsv(list):
-    with open('Phueak100kCleanUp.csv', 'w', newline='',encoding="UTF-8") as myfile:
+    with open('เทCleanUp.csv', 'w', newline='',encoding="UTF-8") as myfile:
         writer = csv.writer(myfile, delimiter=",")
         writer.writerow(['tweet'])
         for row in list:
@@ -26,7 +26,7 @@ def saveToCsv(list):
 # cleanTweets = cleanText(tweets)
 # saveToCsv(cleanTweets)
 
-df = pd.read_csv("thai-language-tweets-phueak.csv")
+df = pd.read_csv("thai-language-tweets-เท.csv")
 tweets = df['content'].dropna()
 cleanTweets = cleanText(tweets)
 saveToCsv(cleanTweets)
